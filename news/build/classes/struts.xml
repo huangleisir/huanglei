@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<constant name="struts.custom.i18n.resources" value="utf-8" />
+	<package name="news" extends="struts-default" namespace="/">
+		<!-- intercetor元素必须在action之前 -->
+		<interceptors>
+			<interceptor name="Timer"
+				class="com.bao.news.interceptor.TimerInterceptor"></interceptor>
+
+		</interceptors>
+		<action name="homePage" class="newsAction" method="gotoIndexPage">
+			<result name="success">/home.jsp</result>
+			<result name="error">error.jsp</result>
+		</action>
+
+		<action name="doReply" class="newsAction" method="doReply">
+			<!-- type默认为dispatcher -->
+			<result name="success" type="dispatcher">home.jsp</result>
+		</action>
+
+		<action name="delNews" class="newsAction" method="delNews">
+			<result name="success" type="dispatcher"> home.jsp</result>
+			<result name="error" type="redirect"> error.jsp</result>
+		</action>
+
+		<action name="goEditNewsPage" class="newsAction" method="goEditNewsPage">
+			<result name="success" type="dispatcher">home.jsp</result>
+		</action>
+
+		<action name="loginPage" class="loginAction" method="login">
+			<result name="success">home.jsp</result>
+			<result name="manager">adminPage.jsp</result>
+
+			<interceptor-ref name="Timer"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+
+		<action name="loginoutPage" class="loginAction" method="LoginOut">
+			<result name="success" type="dispatcher">home.jsp</result>
+		</action>
+
+		<action name="doRegistAction" class="registAction" method="RegistUser">
+			<result name="success" type="dispatcher">home.jsp</result>
+		</action>
+		<action name="doPublishNews" class="publishAction" method="doPublishNews">
+			<result name="success">home.jsp</result>
+		</action>
+
+		<action name="editNews" class="publishAction" method="editNews">
+			<result name="success">home.jsp</result>
+		</action>
+
+
+	</package>
+</struts>

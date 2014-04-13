@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.bao.news.vo">
+	<class name="NewsVO" table="news" >
+		<id name="id" column="id">
+			<generator class="assigned" />
+		</id>
+		<property name="title" column="title" type="string"/>
+		<property name="content" column="content" type="string"/>
+		<property name="author" column="author" type="string"/>
+		<property name="wonderful" column="wonderful" type="string"/>
+		<property name="classId" column="class_id" type="string"/>
+		<property name="clickNum" column="click_Num" type="integer"/>
+		<property name="replyNum" column="reply_Num" type="integer"/>
+		<property name="createTime" column="create_Time" type="timestamp"/>
+	</class>
+</hibernate-mapping>

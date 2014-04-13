@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="news" default="local_dist"><!-- name must be required -->
+	<description>news Publish</description>
+	<property name="version" value="1.0.0"/>
+	<property name="p.name" value="${ant.project.name}" />
+	
+	<property name="base.dir" location="." />
+	<property name="temp.dir" location="temp" />
+	<property name="dist.dir" location="dist" />
+
+	<property name="p.lib" value="WEB-INF/lib"/>
+	<property name="p.classes" value="WEB-INF/classes" />
+	
+	<property name="src.dir" location="src" />
+	<!--<property name="sit.dir" location="env/sit" />-->
+	<property name="build.dir" location="${temp.dir}/classes" />
+	<property name="webroot.dir" location="WebContent"/>
+	<property name="lib.dir" location="${webroot.dir}/${p.lib}" />
+	<!--<property name="res.temp.dir" value="${temp.dir}/resources"/>-->
+
+	<path id="project.classpath">
+		<fileset dir="${lib.dir}" casesensitive="yes">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>	
+	
+	<target name="usage">
+		<echo>+-----------------------------+</echo>
+		<echo>| function list：             |</echo>
+		<echo>|   CLEAN                     |</echo>
+		<echo>|   INITIATION                |</echo>
+		<echo>|   COMPRESS_JS_CSS           |</echo>
+		<echo>|   COMPILING                 |</echo>
+		<echo>|   JAR                       |</echo>
+		<echo>|   LOCAL_DIST                |</echo>
+		<echo>|   SIT_DIST                  |</echo>
+		<echo>+-----------------------------+</echo>
+	</target>
+
+	<target name="clean">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                     CLEAN                         |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<delete dir="${dist.dir}" />
+		<delete dir="${temp.dir}" />
+		<delete dir="${build.dir}"/>
+		<delete dir="./build"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                  INITIATION                       |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${temp.dir}" />
+	</target>
+	
+	
+
+
+	<target name="compile">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                    COMPILING                      |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<javac classpathref="project.classpath" destdir="${build.dir}" encoding="utf-8" debug="on">
+			<src path="${src.dir}"/>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                        JAR                        |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<jar destfile="${temp.dir}/${p.lib}/${p.name}-${version}.jar" >  
+			<fileset dir="${build.dir}" >  
+				<include name="**/*.class" />   
+			</fileset>  
+		</jar>
+	</target>  
+
+	<target name="exportToJar" depends="jar">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                  COPYING_LOCAL_FILE               |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<copy todir="${temp.dir}">
+			<fileset dir="${webroot.dir}/">
+				<include name="**/*" />
+				<!--<exclude name="resources/"/>-->
+				<exclude name="**/*.jar"/>
+				<exclude name="**/*.css"/>
+				<exclude name="**/*.js"/>
+				<exclude name="images/"/>
+				<exclude name="${p.classes}/"/>
+				<exclude name="${p.lib}/" />
+			</fileset>
+		</copy>
+		<!-- copy lib file -->
+		<copy todir="${temp.dir}/${p.lib}/">
+			<fileset dir="${lib.dir}/">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<!-- copy local-xml,properties file to temp\WEB_INFO\classes -->
+		<copy todir="${temp.dir}/${p.classes}">
+			<fileset dir="${src.dir}/">
+				<include name="*.xml"/>
+				<include name="conf/**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="local_dist" depends="exportToJar">
+		<echo>+---------------------------------------------------+</echo>
+		<echo>|                   LOCAL_DIST                      |</echo>
+		<echo>+---------------------------------------------------+</echo>
+		<!--<delete dir="${build.dir}"/>-->
+		<war warfile="${dist.dir}/${p.name}.war" webxml="${temp.dir}/WEB-INF/web.xml">
+			<fileset dir="${temp.dir}"/>
+		</war>
+		<!--<delete dir="${temp.dir}" />-->
+	</target>
+	
+	
+	
+	
+	
+	
+</project>
